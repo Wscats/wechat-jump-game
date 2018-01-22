@@ -30,7 +30,7 @@ setInterval(() => {
       })
     })
   })
-}, 500)
+}, 3000)
 
 http.createServer((req, res) => {
   switch (url.parse(req.url).pathname) {
@@ -50,7 +50,7 @@ http.createServer((req, res) => {
         t = 0;
       }
       console.log("长按：", t, "秒")
-      runExec(`adb shell input swipe ${param.x * 2.5} ${param.y * 2.5} ${param.x * 2.5} ${param.y * 2.5} ${parseInt(t)}`, () => {
+      runExec(`adb shell input swipe 100 200 300 400 ${parseInt(t)}`, () => {
         res.end('success')
       })
       break;
