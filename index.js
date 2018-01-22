@@ -16,7 +16,9 @@ let runExec = (cmdStr, callback) => {
   });
 }
 
-setInterval(() => {
+//setInterval(() => {}, 3000)
+// 事件触发截屏，原地点击两次就触发一次截屏
+let screencap = () => {
   // 在/sdcard/下新建wscats文件件
   runExec(`adb shell mkdir -p /sdcard/wscats`, () => {
     // 截图并保存到/sdcard/wscats/下，并命名为screen.png
@@ -30,11 +32,11 @@ setInterval(() => {
       })
     })
   })
-}, 3000)
+}
 
 http.createServer((req, res) => {
   switch (url.parse(req.url).pathname) {
-      // 跳一跳路由
+    // 跳一跳路由
     case "/jump":
       // 解决跨域
       res.setHeader("Access-Control-Allow-Origin", "*")
@@ -52,6 +54,9 @@ http.createServer((req, res) => {
       console.log("长按：", t, "秒")
       runExec(`adb shell input swipe 100 200 300 400 ${parseInt(t)}`, () => {
         res.end('success')
+        setTimeout(() => {
+          screencap()
+        }, 500)
       })
       break;
     default:
