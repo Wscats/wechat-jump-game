@@ -40,8 +40,8 @@
     var points = [];
     canvas.onclick = function(e) {
       points.push({
-        x: e.clientX,
-        y: e.clientY
+        x: e.offsetX,
+        y: e.offsetY
       })
       console.log(points, points.length);
       if (points.length >= 2) {

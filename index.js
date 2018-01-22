@@ -51,19 +51,24 @@ http.createServer((req, res) => {
       if (param.length < 10) {
         t = 0;
       }
-      console.log("长按：", t, "秒")
-      runExec(`adb shell input swipe 100 200 300 400 ${parseInt(t)}`, () => {
-        res.end('success')
+      console.log("长按：", t, "秒");
+      // 双击屏幕会更新，然后会点击到最后的那个点
+      runExec(`adb shell input swipe 100 200 ${parseInt(param.x)*2.5} ${parseInt(param.y)*2.5} ${parseInt(t)}`, () => {
+        res.end('success');
         setTimeout(() => {
-          screencap()
-        }, 500)
+          screencap();
+        }, 500);
+        // 点击
+        // runExec(`adb shell input tap ${parseInt(param.x)} ${parseInt(param.y)}`, () => {
+        //   res.end('tap');
+        // });
       })
       break;
     default:
       //进入页面
       fs.readFile("." + url.parse(req.url).pathname, function(err, data) {
-        res.end(data)
+        res.end(data);
       })
   }
-}).listen(1314)
-console.log("开启服务器")
+}).listen(1314);
+console.log("开启服务器");
