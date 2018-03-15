@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			html,
+			body {
+				width: 100%;
+				height: 100%;
+				text-align: center;
+			}
+			
+			canvas {
+				border: 1px solid #dee1e4;
+			}
+		</style>
+		<!-- 测试的手机像素为720*1280 2.5倍缩小-->
+		<canvas width="288" height="512" id="canvas"></canvas>
+		<script src="../js/jquery.js"></script>
+		<script>
+			var canvas = document.getElementById('canvas');
+			//ctx画笔
+			var ctx = canvas.getContext("2d");
+			//空图片
+			var img = new Image();
+			//图片完全加载
+			img.src = "./screen.png?" + Math.random();
+			img.onload = function() {
+				ctx.drawImage(img, 0, 0, 288, 512);
+			}
+			var points = [];
+			canvas.onclick = function(e) {
+				points.push({
+					x: e.offsetX,
+					y: e.offsetY
+				})
+				if(points.length >= 2) {
+					// 第一次点击的坐标点
+					console.log("x/y", points[0].x, points[0].y);
+					console.log("↓");
+					// 第二次点击的坐标点
+					console.log("x/y", points[1].x, points[1].y);
+					// 勾股定理计算跳跃两点之间的距离
+					var length = Math.sqrt(Math.pow(points[0].x - points[1].x, 2) + Math.pow(points[0].y - points[1].y, 2));
+					console.log(length, points[1]);
+					// 发送跳一跳的长度和最后坐标点
+					// ajax(length, points[1])
+					$.ajax({
+						url: "http://localhost:8888/screencap",
+						type: "GET",
+						data: {
+							length: length
+						}
+					}).done(function(data) {
+						img.src = "./screen.png?" + Math.random();
+						img.onload = function() {
+							ctx.drawImage(img, 0, 0, 288, 512);
+						}
+						console.log(data)
+					})
+					// 清空数组
+					points.length = 0;
+				}
+			}
+		</script>
+	</body>
+
+</html>
